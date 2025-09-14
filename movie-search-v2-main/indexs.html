@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Explorer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎬 Movie Explorer</h1>
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search movies..." required>
+      <button type="submit">🔍 Search</button>
+    </form>
+  </header>
+
+  <main>
+    <div id="movie-container" class="movie-container"></div>
+  </main>
+
+  <script>
+    const apiKey = "c9348fa6"; // ✅ your OMDb API key
+    const movieContainer = document.getElementById("movie-container");
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById("search-input");
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const movieQuery = urlParams.get("movie");
+
+      if (movieQuery) {
+        searchInput.value = movieQuery;
+        searchMovies(movieQuery);
+      }
+    });
+
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (query) {
+        searchMovies(query);
+      }
+    });
+
+    async function searchMovies(query) {
+      movieContainer.innerHTML = `<p>Loading...</p>`;
+
+      try {
+        let res = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&t=${encodeURIComponent(query)}&plot=short`);
+        let data = await res.json();
+
+        if (data.Response === "True") {
+         
+          displaySingleMovie(data);
+          return;
+        }
+
+        res = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(query)}`);
+        data = await res.json();
+
+        if (data.Response === "True") {
+          displayMovies(data.Search);
+        } else {
+          movieContainer.innerHTML = `<p>No movies found for "${query}".</p>`;
+        }
+      } catch (err) {
+        console.error(err);
+        movieContainer.innerHTML = `<p>Error fetching movies. Try again later.</p>`;
+      }
+    }
+
+    function displaySingleMovie(details) {
+      movieContainer.innerHTML = `
+        <div class="movie-card single">
+          <img src="${details.Poster !== "N/A" ? details.Poster : "placeholder.jpg"}" alt="${details.Title}">
+          <h2>${details.Title} (${details.Year})</h2>
+          <p><b>Genre:</b> ${details.Genre}</p>
+          <p><b>Runtime:</b> ${details.Runtime}</p>
+          <p><b>IMDb Rating:</b> ${details.imdbRating}</p>
+          <p><b>Plot:</b> ${details.Plot}</p>
+          <div class="actions">
+            <button class="fav-btn" data-id="${details.imdbID}">⭐ Favorite</button>
+            <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(details.Title + " trailer")}" target="_blank" class="trailer-btn">🎥 Trailer</a>
+          </div>
+        </div>
+      `;
+
+      setupFavoriteButtons();
+    }
+
+    async function displayMovies(movies) {
+      movieContainer.innerHTML = "";
+
+      for (const movie of movies) {
+        const detailsRes = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${movie.imdbID}&plot=short`);
+        const details = await detailsRes.json();
+
+        const card = document.createElement("div");
+        card.classList.add("movie-card");
+
+        card.innerHTML = `
+          <img src="${movie.Poster !== "N/A" ? movie.Poster : "placeholder.jpg"}" alt="${movie.Title}">
+          <h3>${movie.Title}</h3>
+          <p>(${movie.Year})</p>
+          <p><b>Rating:</b> ${details.imdbRating || "N/A"}</p>
+          <div class="actions">
+            <button class="fav-btn" data-id="${movie.imdbID}">⭐ Favorite</button>
+            <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(movie.Title + " trailer")}" target="_blank" class="trailer-btn">🎥 Trailer</a>
+          </div>
+        `;
+
+        movieContainer.appendChild(card);
+      }
+
+      setupFavoriteButtons();
+    }
+
+    function setupFavoriteButtons() {
+      document.querySelectorAll(".fav-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const movieId = btn.getAttribute("data-id");
+          let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+          if (!favorites.includes(movieId)) {
+            favorites.push(movieId);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            alert("Movie added to favorites!");
+          } else {
+            alert("Already in favorites!");
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
