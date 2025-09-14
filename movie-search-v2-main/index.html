@@ -20,12 +20,11 @@
   </main>
 
   <script>
-    const apiKey = "6e4c5f09"; // ✅ your OMDb API key
+    const apiKey = "c9348fa6"; // ✅ your OMDb API key
     const movieContainer = document.getElementById("movie-container");
     const searchForm = document.getElementById("search-form");
     const searchInput = document.getElementById("search-input");
 
-    // ✅ Auto-search if redirected with ?movie= query
     window.addEventListener("DOMContentLoaded", () => {
       const urlParams = new URLSearchParams(window.location.search);
       const movieQuery = urlParams.get("movie");
@@ -36,7 +35,6 @@
       }
     });
 
-    // ✅ Search form submit
     searchForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const query = searchInput.value.trim();
@@ -45,22 +43,19 @@
       }
     });
 
-    // ✅ Search movies function
     async function searchMovies(query) {
       movieContainer.innerHTML = `<p>Loading...</p>`;
 
       try {
-        // First try exact title search
         let res = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&t=${encodeURIComponent(query)}&plot=short`);
         let data = await res.json();
 
         if (data.Response === "True") {
-          // Found exact movie
+         
           displaySingleMovie(data);
           return;
         }
 
-        // If not found, try keyword search
         res = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(query)}`);
         data = await res.json();
 
@@ -75,7 +70,6 @@
       }
     }
 
-    // ✅ Display single movie (exact title)
     function displaySingleMovie(details) {
       movieContainer.innerHTML = `
         <div class="movie-card single">
@@ -95,7 +89,6 @@
       setupFavoriteButtons();
     }
 
-    // ✅ Display multiple results
     async function displayMovies(movies) {
       movieContainer.innerHTML = "";
 
@@ -123,7 +116,6 @@
       setupFavoriteButtons();
     }
 
-    // ✅ Handle favorites
     function setupFavoriteButtons() {
       document.querySelectorAll(".fav-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
