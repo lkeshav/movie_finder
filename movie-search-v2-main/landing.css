@@ -1,0 +1,99 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* Background slideshow */
+body {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 1s ease-in-out;
+}
+
+/* Hero section */
+.hero {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  color: #ddd;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  background: #ff1744;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(255, 23, 68, 0.6);
+}
+
+.btn:hover {
+  background: #ff4569;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 23, 68, 0.9);
+}
+
+.random-btn {
+  background: #2979ff;
+  box-shadow: 0 4px 15px rgba(41, 121, 255, 0.6);
+}
+
+.random-btn:hover {
+  background: #5393ff;
+  box-shadow: 0 6px 20px rgba(41, 121, 255, 0.9);
+}
+
+/* Footer */
+footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+  z-index: 2;
+}
