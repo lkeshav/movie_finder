@@ -1,7 +1,6 @@
-// ✅ Use the same OMDb API key you already use in index.js
-const apiKey = "6e4c5f09"; // replace with your actual key if different
 
-// Background slideshow posters
+const apiKey = "c9348fa6"; 
+
 const posters = [
   "https://image.tmdb.org/t/p/w1280/5YZbUmjbMa3ClvSW1Wj3D6XGolb.jpg",
   "https://image.tmdb.org/t/p/w1280/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
@@ -17,7 +16,6 @@ function changeBackground() {
 setInterval(changeBackground, 4000);
 changeBackground();
 
-// Random Movie Button
 document.getElementById("randomBtn").addEventListener("click", async () => {
   const keywords = ["batman", "avengers", "matrix", "spiderman", "ironman", "joker", "harry potter"];
   const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
@@ -28,7 +26,7 @@ document.getElementById("randomBtn").addEventListener("click", async () => {
 
     if (data.Response === "True" && data.Search.length > 0) {
       const randomMovie = data.Search[Math.floor(Math.random() * data.Search.length)];
-      // redirect with movie title
+      
       window.location.href = `index.html?movie=${encodeURIComponent(randomMovie.Title)}`;
     } else {
       alert("No movie found, try again!");
